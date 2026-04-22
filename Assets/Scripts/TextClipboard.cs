@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class TextClipboard : MonoBehaviour
 {
+    //ã‚³ãƒ”ãƒ¼ã—ãŸã‚‚ã®ã‚’è¨˜æ†¶
     public static string copiedText = "";
-    public static GameObject copiedObject = null; // ‚Ç‚ê‚ğƒRƒs[‚µ‚½‚©
+    public static GameObject copiedObject = null;
     public static CategoryHolder.TextCategory copiedCategory;
     public static CategoryHolder.Textofnumber copiednumber;
 }
