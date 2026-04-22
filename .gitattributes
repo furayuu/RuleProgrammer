@@ -1,3 +1,8 @@
+* text=auto
+
 *.cs text working-tree-encoding=UTF-8
+
 *.shader text working-tree-encoding=UTF-8
 *.txt text working-tree-encoding=UTF-8
+*.json text working-tree-encoding=UTF-8
+*.meta text eol=lf
