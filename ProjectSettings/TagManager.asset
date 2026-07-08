@@ -7,8 +7,11 @@ TagManager:
   - Enemy
   - Ground
   - Ally
+<<<<<<< HEAD
   - Platform
   - JumpTrigger
+=======
+>>>>>>> bd02ea9 (味方がいる足場を探知してジャンプする敵)
   layers:
   - Default
   - TransparentFX
