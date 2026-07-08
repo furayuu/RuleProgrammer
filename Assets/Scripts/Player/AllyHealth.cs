@@ -1,14 +1,12 @@
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class AllyHealth : MonoBehaviour
 {
     [Header("Health")]
-    public int maxHP = 3;
+    public int maxHP = 5;
 
     private int currentHP;
     private bool isDead = false;
-
-    private Animator animator;
 
     public int CurrentHP => currentHP;
 
@@ -17,7 +15,6 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
-        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damage)
@@ -28,8 +25,6 @@ public class EnemyHealth : MonoBehaviour
         currentHP -= damage;
 
         currentHP = Mathf.Max(currentHP, 0);
-
-        animator.SetTrigger("Hit");
 
         if (currentHP <= 0)
         {
@@ -52,8 +47,6 @@ public class EnemyHealth : MonoBehaviour
     {
         isDead = true;
 
-        animator.SetTrigger("Die");
-
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject);
     }
 }
