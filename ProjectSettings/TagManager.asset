@@ -6,12 +6,8 @@ TagManager:
   tags:
   - Enemy
   - Ground
-  - Ally
-<<<<<<< HEAD
   - Platform
   - JumpTrigger
-=======
->>>>>>> bd02ea9 (味方がいる足場を探知してジャンプする敵)
   layers:
   - Default
   - TransparentFX
@@ -19,10 +15,10 @@ TagManager:
   - Player
   - Water
   - UI
-  - Enemy
-  - Goal
   - Ground
   - Platform
+  - 
+  - 
   - 
   - 
   - 
@@ -49,9 +45,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Background
-    uniqueID: 1434398483
-    locked: 0
   - name: MainLayer
-    uniqueID: 2228950309
+    uniqueID: 3861413629
+    locked: 0
+  - name: Map
+    uniqueID: 1868166595
     locked: 0

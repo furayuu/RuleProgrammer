@@ -13,7 +13,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartRound(int round)
     {
-        // 前ラウンドの生成停止
         if (spawnCoroutine != null)
         {
             StopCoroutine(spawnCoroutine);
@@ -24,7 +23,6 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemies(int round)
     {
-        // ラウンド×5体生成
         int enemyCount = round * 5;
 
         for (int i = 0; i < enemyCount; i++)

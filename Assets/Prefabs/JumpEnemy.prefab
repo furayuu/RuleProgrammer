@@ -45,8 +45,8 @@ GameObject:
   - component: {fileID: 8245741616750013903}
   - component: {fileID: 4759421287963567059}
   - component: {fileID: 2750509239009717629}
-  - component: {fileID: 8732187285368933551}
   - component: {fileID: 2603795803000297343}
+  - component: {fileID: 8732187285368933551}
   m_Layer: 6
   m_Name: JumpEnemy
   m_TagString: Enemy
@@ -108,8 +108,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -2066016987
-  m_SortingLayer: 2
+  m_SortingLayerID: -433553667
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -6367560908665664636, guid: cd947491a13509945aa1b644f9db3ef2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -201,7 +201,7 @@ MonoBehaviour:
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 64
   canMove: 1
 --- !u!114 &2750509239009717629
 MonoBehaviour:
@@ -216,6 +216,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 3
+--- !u!114 &2603795803000297343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6641779517017969265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d7846dd3db7b69409e3aa9f86b33dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 10
 --- !u!95 &8732187285368933551
 Animator:
   serializedVersion: 5
@@ -237,16 +250,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2603795803000297343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6641779517017969265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d7846dd3db7b69409e3aa9f86b33dbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpForce: 10
