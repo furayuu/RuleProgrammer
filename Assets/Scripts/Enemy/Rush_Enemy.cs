@@ -1,35 +1,72 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rush_Enemy : MonoBehaviour
 {
-    Transform playerTr;
-    [SerializeField] float speed = 2; 
-    private Animator animator;
+    [Header("Rush Settings")]
+    public float detectDistance = 3f;     
+    public float chargeTime = 0.5f;       
+    public float rushSpeed = 6f;          
+    public float rushTime = 1f;           
+    public float cooldown = 1.5f;         
 
-    private void Start()
+    private EnemyMove enemyMove;
+    private Rigidbody2D rb;
+    private Transform player;
+
+    private bool isBusy = false;
+    private float rushDirection;
+
+    void Start()
     {
-        playerTr = GameObject.FindGameObjectWithTag("Player").transform;
-        animator = GetComponent<Animator>();
+        enemyMove = GetComponent<EnemyMove>();
+        rb = enemyMove.GetRigidBody();
+        player = enemyMove.GetPlayer();
     }
 
-    private void Update()
+    void Update()
     {
-
-        if (Vector2.Distance(transform.position, playerTr.position) < 0.1f)
+        if (player == null || isBusy)
             return;
 
-        if (Vector2.Distance(transform.position, playerTr.position) < 3.0f)
+        float distance = Mathf.Abs(player.position.x - transform.position.x);
+
+        if (distance <= detectDistance)
         {
-            speed = 4.0f;
+            StartCoroutine(RushRoutine());
+        }
+    }
+
+    IEnumerator RushRoutine()
+    {
+        isBusy = true;
+
+        enemyMove.canMove = false;
+
+        rushDirection = Mathf.Sign(player.position.x - transform.position.x);
+
+        rb.velocity = Vector2.zero;
+        yield return new WaitForSeconds(chargeTime);
+
+        float timer = 0f;
+
+        while (timer < rushTime)
+        {
+            rb.velocity = new Vector2(
+                rushDirection * rushSpeed,
+                rb.velocity.y
+            );
+
+            timer += Time.deltaTime;
+            yield return null;
         }
 
-            transform.position = Vector2.MoveTowards(
-            transform.position,
-            new Vector2(playerTr.position.x, playerTr.position.y),
-            speed * Time.deltaTime);
+        rb.velocity = new Vector2(0, rb.velocity.y);
 
-        animator.SetBool("IsRunning", true);
+        enemyMove.canMove = true;
+
+        yield return new WaitForSeconds(cooldown);
+
+        isBusy = false;
     }
 }

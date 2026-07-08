@@ -4,6 +4,9 @@ public class EnemyMove : MonoBehaviour
 {
     public float moveSpeed = 2f;
 
+    [HideInInspector]
+    public bool canMove = true;
+
     private Transform player;
     private Rigidbody2D rb;
     private Animator animator;
@@ -18,6 +21,9 @@ public class EnemyMove : MonoBehaviour
 
     void Update()
     {
+        if (!canMove)
+            return;
+
         MoveToPlayer();
     }
 
@@ -25,23 +31,28 @@ public class EnemyMove : MonoBehaviour
     {
         if (player == null) return;
 
-        float direction =
-            Mathf.Sign(player.position.x - transform.position.x);
+        float direction = Mathf.Sign(player.position.x - transform.position.x);
 
         rb.velocity = new Vector2(
             direction * moveSpeed,
             rb.velocity.y
         );
 
-               if (direction > 0)
-        {
+        if (direction > 0)
             transform.localScale = new Vector3(1, 1, 1);
-        }
         else
-        {
             transform.localScale = new Vector3(-1, 1, 1);
-        }
 
         animator.SetBool("IsRunning", true);
+    }
+
+    public Transform GetPlayer()
+    {
+        return player;
+    }
+
+    public Rigidbody2D GetRigidBody()
+    {
+        return rb;
     }
 }
