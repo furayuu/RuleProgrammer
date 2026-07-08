@@ -55,6 +55,7 @@ public class AssaultEnemyMove : MonoBehaviour
         if (currentTarget == null)
             return;
 
+        // 足場上に乗って近くにユニットがいる場合に攻撃など
         if (IsAllyNearby())
         {
             return;
@@ -74,6 +75,7 @@ public class AssaultEnemyMove : MonoBehaviour
 
         rb.velocity = new Vector2(direction * moveSpeed, rb.velocity.y);
 
+        // 向き変更
         Vector3 scale = transform.localScale;
 
         if (direction > 0)
@@ -102,6 +104,7 @@ public class AssaultEnemyMove : MonoBehaviour
                 rayDistance,
                 platformLayer);
 
+        // 足場を発見
         if (platformHit.collider != null)
         {
             Collider2D[] allies =
@@ -114,6 +117,7 @@ public class AssaultEnemyMove : MonoBehaviour
                 if (!col.CompareTag("Ally"))
                     continue;
 
+                // 足場上に味方がいたらジャンプ
                 Jump();
                 return;
             }
