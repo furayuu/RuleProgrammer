@@ -33,8 +33,7 @@ public class EnemyMove : MonoBehaviour
             rb.velocity.y
         );
 
-        // 翻转朝向
-        if (direction > 0)
+               if (direction > 0)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -43,7 +42,6 @@ public class EnemyMove : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        // Animator
         animator.SetBool("IsRunning", true);
     }
 }
