@@ -7403,7 +7403,7 @@ MonoBehaviour:
   damageMultiplier: 1
   attackSpeedMultiplier: 1
   throwSpeedMultiplier: 1
---- !u!1001 &4527870863845962958
+--- !u!1001 &1644054706063754297
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -7411,49 +7411,53 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 2553858478528154833, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+      propertyPath: m_Name
+      value: RushEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.41
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalPosition.y
       value: -1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.00037507436
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4602119765468420090, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+    - target: {fileID: 5720537740883631719, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6038286473488450892, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
-      propertyPath: m_Name
-      value: RushEnemy
+    - target: {fileID: 6049584469493074477, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+      propertyPath: rushSpeed
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7467,5 +7471,5 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 359244826}
   - {fileID: 2082123403}
-  - {fileID: 4527870863845962958}
+  - {fileID: 1644054706063754297}
   - {fileID: 671085147}
