@@ -18,32 +18,26 @@ public class EnemyAttack : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (attackTimer > 0)
             return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerHealth player =
-                collision.gameObject.GetComponent<PlayerHealth>();
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
 
-            if (player != null)
-            {
-                player.TakeDamage(damage);
-                attackTimer = attackCooldown;
-            }
+        if (player != null)
+        {
+            player.TakeDamage(damage);
+            attackTimer = attackCooldown;
+            return;
         }
-        else if (collision.gameObject.CompareTag("Ally"))
-        {
-            AllyHealth ally =
-                collision.gameObject.GetComponent<AllyHealth>();
 
-            if (ally != null)
-            {
-                ally.TakeDamage(damage);
-                attackTimer = attackCooldown;
-            }
+        AllyHealth ally = other.GetComponent<AllyHealth>();
+
+        if (ally != null)
+        {
+            ally.TakeDamage(damage);
+            attackTimer = attackCooldown;
         }
     }
 }

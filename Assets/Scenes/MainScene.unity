@@ -8744,6 +8744,7 @@ GameObject:
   - component: {fileID: 2082123400}
   - component: {fileID: 2082123404}
   - component: {fileID: 2082123408}
+  - component: {fileID: 2082123409}
   - component: {fileID: 2082123407}
   m_Layer: 3
   m_Name: Player
@@ -8803,7 +8804,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ffb32dc4e57514446869846e82b9c833, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -8948,6 +8949,19 @@ MonoBehaviour:
   damageMultiplier: 1
   attackSpeedMultiplier: 1
   throwSpeedMultiplier: 1
+--- !u!114 &2082123409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082123399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8afcce0902f44469b9c3abf10ac56d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

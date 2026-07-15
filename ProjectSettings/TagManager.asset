@@ -19,9 +19,9 @@ TagManager:
   - UI
   - Ground
   - Platform
-  - 
-  - 
-  - 
+  - Enemy
+  - Projectile
+  - EnemyAtk
   - 
   - 
   - 
