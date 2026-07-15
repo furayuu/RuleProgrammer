@@ -13,6 +13,11 @@ public class EnemyMove : MonoBehaviour
     [HideInInspector]
     public bool canMove = true;
 
+    // true：自动追玩家（默认）
+    // false：由其它脚本调用 Move()
+    [HideInInspector]
+    public bool autoMove = true;
+
     protected bool isGrounded;
 
     private Transform player;
@@ -32,7 +37,6 @@ public class EnemyMove : MonoBehaviour
 
     void Update()
     {
-
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
             groundCheckRadius,
@@ -43,7 +47,10 @@ public class EnemyMove : MonoBehaviour
         if (!canMove)
             return;
 
-        MoveToPlayer();
+        if (autoMove)
+        {
+            MoveToPlayer();
+        }
     }
 
     void MoveToPlayer()
@@ -54,16 +61,26 @@ public class EnemyMove : MonoBehaviour
         float direction =
             Mathf.Sign(player.position.x - transform.position.x);
 
+        Move(direction);
+    }
+
+    public void Move(float direction)
+    {
         rb.velocity = new Vector2(
             direction * moveSpeed,
             rb.velocity.y);
 
-        if (direction > 0)
-            transform.localScale = new Vector3(1, 1, 1);
-        else
-            transform.localScale = new Vector3(-1, 1, 1);
+        if (direction != 0)
+        {
+            transform.localScale = new Vector3(
+                direction > 0 ? 1 : -1,
+                1,
+                1);
+        }
 
-        animator.SetBool("IsRunning", Mathf.Abs(rb.velocity.x) > 0.05f);
+        animator.SetBool(
+            "IsRunning",
+            Mathf.Abs(direction) > 0.01f);
     }
 
     public bool IsGrounded()

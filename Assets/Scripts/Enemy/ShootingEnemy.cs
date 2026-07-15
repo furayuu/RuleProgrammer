@@ -1,183 +1,148 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class ShootingEnemy : MonoBehaviour
 {
-    public float moveSpeed = 2f;
-    public float changeDirectionTime = 2f;
-    public float moveTime = 2f;
-    public float stopTime = 1f;
+    [Header("Distance")]
+    public float minDistance = 5f;
+    public float maxDistance = 8f;
 
-    private float timer;
-    private bool isMoving = true;
-    private float moveDirection; // -1:ç∂ 1:âE 0:í‚é~
-
+    [Header("Shoot")]
     public float shotInterval = 1f;
-    private float shotTimer;
-    [SerializeField] private float bulletSpeed = 2f;
 
-    private Rigidbody2D rb;
-    private Animator animator;
+    [Header("Target Refresh")]
+    public float targetRefreshTime = 0.2f;
 
     public GameObject bulletPrefab;
     public Transform firePoint;
 
-    EnemyMove enemymove;
+    private EnemyMove enemyMove;
 
-    public enum ShootType
-    {
-        StopOnly,      // é~Ç‹Ç¡ÇƒÇ¢ÇÈéûÇæÇØåÇÇ¬
-        Always         // èÌÇ…åÇÇ¬
-    }
+    private float shotTimer;
+    private float targetTimer;
 
-    public ShootType shootType;
+    private Transform attackTarget;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        //animator = GetComponent<Animator>();
+        enemyMove = GetComponent<EnemyMove>();
 
-        moveDirection = Random.Range(0, 2) == 0 ? -1f : 1f;
+        enemyMove.autoMove = false;
     }
 
     void Update()
     {
-        RandomMove();
+        UpdateTarget();
+
+        MoveControl();
 
         ShotControl();
     }
 
-    void RandomMove()
+    void MoveControl()
     {
-        timer += Time.deltaTime;
+        Debug.Log(enemyMove.GetPlayer());
+        Transform player = enemyMove.GetPlayer();
 
-        if (isMoving)
+        if (player == null)
+            return;
+
+        float distance = Mathf.Abs(
+            player.position.x - transform.position.x);
+
+        float direction =
+            Mathf.Sign(player.position.x - transform.position.x);
+
+        if (distance > maxDistance)
         {
-            Move(moveDirection);
-
-            if (timer >= moveTime)
-            {
-                timer = 0;
-                isMoving = false;
-            }
+            enemyMove.Move(direction);
+        }
+        else if (distance < minDistance)
+        {
+            enemyMove.Move(-direction);
         }
         else
         {
-            Move(0);
-
-            if (timer >= stopTime)
-            {
-                timer = 0;
-                isMoving = true;
-
-                moveDirection = Random.Range(0, 2) == 0 ? -1f : 1f;
-            }
+            enemyMove.Move(0);
         }
     }
 
-    void Move(float direction)
+    void UpdateTarget()
     {
-        rb.velocity = new Vector2(direction * moveSpeed, rb.velocity.y);
+        targetTimer += Time.deltaTime;
 
-        if (direction != 0)
+        if (targetTimer >= targetRefreshTime)
         {
-            transform.localScale = new Vector3(
-                direction > 0 ? 1 : -1,
-                1,
-                1
-            );
+            targetTimer = 0;
+
+            attackTarget = GetNearestTarget();
         }
-    }
-
-    void FaceTarget(Transform target)
-    {
-        float direction = Mathf.Sign(target.position.x - transform.position.x);
-
-        transform.localScale = new Vector3(
-            direction > 0 ? 1 : -1,
-            1,
-            1
-        );
     }
 
     void ShotControl()
     {
+        if (attackTarget == null)
+            return;
+
         shotTimer += Time.deltaTime;
 
-        Transform target = GetNearestTarget();
-        
-        switch (shootType)
+        if (shotTimer >= shotInterval)
         {
-            // ìÆÇ´Ç»Ç™ÇÁåÇÇ¬
-            case ShootType.Always:
+            shotTimer = 0;
 
-                if (shotTimer >= shotInterval)
-                {
-                    shotTimer = 0;
-                    Shoot();
-                }
-
-                break;
-            // é~Ç‹Ç¡ÇƒåÇÇ¬
-            case ShootType.StopOnly:
-
-                if (!isMoving && shotTimer >= shotInterval)
-                {
-                    shotTimer = 0;
-                    FaceTarget(target);
-                    Shoot();
-                }
-
-                break;
+            Shoot(attackTarget);
         }
     }
 
-    void Shoot()
+    void Shoot(Transform target)
     {
-        Transform target = GetNearestTarget();
+        Debug.Log("Shoot");
+        Vector2 dir =
+            (target.position - firePoint.position).normalized;
 
-        if (target == null) return;
+        GameObject bullet =
+            Instantiate(
+                bulletPrefab,
+                firePoint.position,
+                Quaternion.identity);
 
-        GameObject bulletObj = Instantiate(
-            bulletPrefab,
-            firePoint.position,
-            Quaternion.identity);
-
-        Vector2 dir = (target.position - firePoint.position).normalized;
-
-        bulletObj.GetComponent<EnemyBullet>().SetDirection(dir);
+        bullet.GetComponent<EnemyBullet>().SetDirection(dir);
     }
-
     Transform GetNearestTarget()
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject[] allies = GameObject.FindGameObjectsWithTag("Ally");
+        GameObject[] players =
+            GameObject.FindGameObjectsWithTag("Player");
+
+        GameObject[] allies =
+            GameObject.FindGameObjectsWithTag("Ally");
 
         Transform nearest = null;
-        float minDistance = Mathf.Infinity;
 
-        // PlayerÇåüçı
+        float min = Mathf.Infinity;
+
         foreach (GameObject obj in players)
         {
-            float distance = Vector2.Distance(transform.position, obj.transform.position);
+            float d =
+                Vector2.Distance(
+                    transform.position,
+                    obj.transform.position);
 
-            if (distance < minDistance)
+            if (d < min)
             {
-                minDistance = distance;
+                min = d;
                 nearest = obj.transform;
             }
         }
 
-        // AllyÇåüçı
         foreach (GameObject obj in allies)
         {
-            float distance = Vector2.Distance(transform.position, obj.transform.position);
+            float d =
+                Vector2.Distance(
+                    transform.position,
+                    obj.transform.position);
 
-            if (distance < minDistance)
+            if (d < min)
             {
-                minDistance = distance;
+                min = d;
                 nearest = obj.transform;
             }
         }
