@@ -80,6 +80,7 @@ public class ShootingEnemy : MonoBehaviour
 
     void ShotControl()
     {
+        Debug.Log(attackTarget);
         if (attackTarget == null)
             return;
 

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4808204479487892129}
   - component: {fileID: 2747209617597600423}
   - component: {fileID: 6805274313732923249}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ShootEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDistance: 5
   maxDistance: 8
-  shotInterval: 1
+  shotInterval: 5
   targetRefreshTime: 0.2
   bulletPrefab: {fileID: 7742799474096098468, guid: 93fed8a8ee32da242a055856f05529f4, type: 3}
   firePoint: {fileID: 2881558623762655541}
@@ -191,6 +191,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   canMove: 1
+  autoMove: 1
 --- !u!114 &2747209617597600423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,7 +235,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2881558623762655541}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +266,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3875092112949040389}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}

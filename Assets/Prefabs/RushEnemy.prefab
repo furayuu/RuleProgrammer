@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5977979410503466173}
   - component: {fileID: 5463037372005831952}
   - component: {fileID: 6049584469493074477}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RushEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -206,6 +206,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   canMove: 1
+  autoMove: 1
 --- !u!114 &6049584469493074477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3812699719750384845}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}

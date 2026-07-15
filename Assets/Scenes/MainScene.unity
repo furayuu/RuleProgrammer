@@ -900,8 +900,8 @@ MonoBehaviour:
   - {fileID: 2553858478528154833, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
   - {fileID: 1925391829239239305, guid: 0fd2e673da8a71049a3a24a3aab1fdd1, type: 3}
   spawnWeights:
-  - 0
-  - 0
+  - 25
+  - 50
   - 25
   spawnPoint: {fileID: 1508257793}
   spawnInterval: 2

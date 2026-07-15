@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1349422552639668691}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Groundcheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 2750509239009717629}
   - component: {fileID: 2603795803000297343}
   - component: {fileID: 8732187285368933551}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: JumpEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -203,6 +203,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   canMove: 1
+  autoMove: 1
 --- !u!114 &2750509239009717629
 MonoBehaviour:
   m_ObjectHideFlags: 0
