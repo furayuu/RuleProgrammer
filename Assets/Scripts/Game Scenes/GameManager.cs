@@ -3,15 +3,18 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public float roundTime = 30f;   // 1ラウンドの時間
+    public float roundTime = 30f;   
     private float timer;
 
     public int currentRound = 1;
+    public int maxRound = 5;
 
     public TMP_Text timerText;
     public TMP_Text roundText;
 
     public EnemySpawner enemySpawner;
+
+    private bool gameFinished = false;
 
     void Start()
     {
@@ -19,7 +22,8 @@ public class GameManager : MonoBehaviour
 
         roundText.text = "Round " + currentRound;
 
-        // ラウンド1開始
+        enemySpawner.roundDuration = roundTime;
+
         enemySpawner.StartRound(currentRound);
     }
 
@@ -27,21 +31,34 @@ public class GameManager : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        timerText.text = Mathf.Ceil(timer).ToString();
+        timerText.text = Mathf.Ceil(Mathf.Max(timer, 0)).ToString();
 
         if (timer <= 0)
         {
             NextRound();
         }
+
+        if (gameFinished)
+            return;
+
     }
 
     void NextRound()
     {
+        if (currentRound >= maxRound)
+        {
+            gameFinished = true;
+            Debug.Log("Stage Clear!");
+            return;
+        }
+
         currentRound++;
 
         roundText.text = "Round " + currentRound;
 
         timer = roundTime;
+
+        enemySpawner.roundDuration = roundTime;
 
         enemySpawner.StartRound(currentRound);
     }

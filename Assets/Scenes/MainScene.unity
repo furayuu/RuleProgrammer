@@ -435,6 +435,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roundTime: 30
   currentRound: 1
+  maxRound: 5
   timerText: {fileID: 1416579407}
   roundText: {fileID: 1477976089}
   enemySpawner: {fileID: 1088928692}
@@ -447,7 +448,7 @@ Transform:
   m_GameObject: {fileID: 280374943}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.83752203, y: -2.3087022, z: 0.17369875}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -894,9 +895,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce4987acd90970e4886f8ab3f6f32f66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 6641779517017969265, guid: e6f4cdf060a5eaa49bc82dfb91425634, type: 3}
+  enemyPrefabs:
+  - {fileID: 6641779517017969265, guid: e6f4cdf060a5eaa49bc82dfb91425634, type: 3}
+  - {fileID: 2553858478528154833, guid: f248eb1d26caa8e4fb47127bf7b9f621, type: 3}
+  - {fileID: 1925391829239239305, guid: 0fd2e673da8a71049a3a24a3aab1fdd1, type: 3}
+  spawnWeights:
+  - 30
+  - 50
+  - 20
   spawnPoint: {fileID: 1508257793}
   spawnInterval: 2
+  roundDuration: 30
 --- !u!4 &1088928693
 Transform:
   m_ObjectHideFlags: 0
@@ -1029,7 +1038,7 @@ GameObject:
   - component: {fileID: 1194915764}
   - component: {fileID: 1194915767}
   - component: {fileID: 1194915768}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Map
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -8251,9 +8260,9 @@ GameObject:
   - component: {fileID: 1730770035}
   - component: {fileID: 1730770034}
   - component: {fileID: 1730770033}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8892,7 +8901,7 @@ MonoBehaviour:
   checkRadius: 0.2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 192
 --- !u!95 &2082123407
 Animator:
   serializedVersion: 5
@@ -8935,7 +8944,7 @@ MonoBehaviour:
   throwDuration: 0.8
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 64
   damageMultiplier: 1
   attackSpeedMultiplier: 1
   throwSpeedMultiplier: 1
