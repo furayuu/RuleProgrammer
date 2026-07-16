@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Data.SqlTypes;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,9 +9,11 @@ public class GameManager : MonoBehaviour
 
     public int currentRound = 1;
     public int maxRound = 5;
+    public int Money = 0;
 
     public TMP_Text timerText;
     public TMP_Text roundText;
+    public TMP_Text moneyText;
 
     public EnemySpawner enemySpawner;
 
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
         if (gameFinished)
             return;
 
+        HaveMoney();
     }
 
     void NextRound()
@@ -61,5 +65,10 @@ public class GameManager : MonoBehaviour
         enemySpawner.roundDuration = roundTime;
 
         enemySpawner.StartRound(currentRound);
+    }
+
+    void HaveMoney()
+    {
+        moneyText.text = "Money " + Money;
     }
 }

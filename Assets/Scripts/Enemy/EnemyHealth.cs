@@ -14,10 +14,14 @@ public class EnemyHealth : MonoBehaviour
 
     public float HealthPercent => (float)currentHP / maxHP;
 
+    GameManager gameManager;
+
     void Start()
     {
         currentHP = maxHP;
         animator = GetComponent<Animator>();
+
+        gameManager = FindFirstObjectByType<GameManager>();
     }
 
     public void TakeDamage(int damage)
@@ -50,10 +54,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        gameManager.Money += 5;
+
         isDead = true;
 
-        animator.SetTrigger("Die");
+        animator.SetTrigger("Die");        
 
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 0.5f);   
     }
 }
