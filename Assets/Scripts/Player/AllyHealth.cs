@@ -8,6 +8,12 @@ public class AllyHealth : MonoBehaviour
     private int currentHP;
     private bool isDead = false;
 
+    private Animator animator;
+
+    // 新增
+    [HideInInspector]
+    public BuildPoint ownerBuildPoint;
+
     public int CurrentHP => currentHP;
 
     public float HealthPercent => (float)currentHP / maxHP;
@@ -15,16 +21,23 @@ public class AllyHealth : MonoBehaviour
     void Start()
     {
         currentHP = maxHP;
+        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damage)
     {
+        StopAllCoroutines();
+
         if (isDead)
             return;
 
         currentHP -= damage;
-
         currentHP = Mathf.Max(currentHP, 0);
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Hit");
+        }
 
         if (currentHP <= 0)
         {
@@ -46,6 +59,12 @@ public class AllyHealth : MonoBehaviour
     void Die()
     {
         isDead = true;
+
+        if (ownerBuildPoint != null)
+        {
+            ownerBuildPoint.hasAlly = false;
+            ownerBuildPoint.currentAlly = null;
+        }
 
         Destroy(gameObject);
     }

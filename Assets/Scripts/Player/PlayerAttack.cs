@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -28,18 +29,19 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Upgrades")]
 
-    // 攻击力倍率
+
     public float damageMultiplier = 1f;
 
-    // 攻击速度倍率
     public float attackSpeedMultiplier = 1f;
 
-    // 投掷速度倍率
     public float throwSpeedMultiplier = 1f;
 
     void Update()
     {
         FaceMouse();
+        
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
 
         attackTimer -= Time.deltaTime;
 
@@ -82,8 +84,6 @@ public class PlayerAttack : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
-
-    // 左键：直射
     void ShootDirect()
     {
         Vector3 mousePos =
@@ -123,8 +123,6 @@ public class PlayerAttack : MonoBehaviour
                 new Vector3(-1, 1, 1);
         }
     }
-
-    // 右键：投掷
     void ShootThrow()
     {
         Vector3 mousePos =
