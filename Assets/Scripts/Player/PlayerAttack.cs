@@ -24,6 +24,9 @@ public class PlayerAttack : MonoBehaviour
     [Tooltip("基础飞行时间")]
     public float throwDuration = 0.8f;
 
+    [Header("Throw Range")]
+    public float maxThrowDistance = 10f;
+
     [Header("Ground Detection")]
     public LayerMask groundLayer;
 
@@ -39,7 +42,7 @@ public class PlayerAttack : MonoBehaviour
     void Update()
     {
         FaceMouse();
-        
+
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
@@ -131,6 +134,19 @@ public class PlayerAttack : MonoBehaviour
             );
 
         mousePos.z = 0;
+        
+        Vector3 direction = mousePos - firePoint.position;
+
+        direction.z = 0;
+
+        if (direction.magnitude > maxThrowDistance)
+        {
+            direction =
+                direction.normalized * maxThrowDistance;
+
+            mousePos =
+                firePoint.position + direction;
+        }
 
         RaycastHit2D hit =
             Physics2D.Raycast(
