@@ -1,14 +1,21 @@
 using UnityEngine;
 using TMPro;
-using System.Data.SqlTypes;
 
 public class GameManager : MonoBehaviour
 {
-    public float roundTime = 30f;   
+    // ----------------------------
+    // Singleton
+    // ----------------------------
+    public static GameManager Instance { get; private set; }
+
+    [Header("Round")]
+    public float roundTime = 30f;
     private float timer;
 
     public int currentRound = 1;
     public int maxRound = 5;
+
+    [Header("Money")]
     public int Money = 0;
 
     public TMP_Text timerText;
@@ -19,6 +26,20 @@ public class GameManager : MonoBehaviour
 
     private bool gameFinished = false;
 
+    void Awake()
+    {
+        // Singleton
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     void Start()
     {
         timer = roundTime;
@@ -28,10 +49,15 @@ public class GameManager : MonoBehaviour
         enemySpawner.roundDuration = roundTime;
 
         enemySpawner.StartRound(currentRound);
+
+        UpdateMoneyUI();
     }
 
     void Update()
     {
+        if (gameFinished)
+            return;
+
         timer -= Time.deltaTime;
 
         timerText.text = Mathf.Ceil(Mathf.Max(timer, 0)).ToString();
@@ -40,11 +66,6 @@ public class GameManager : MonoBehaviour
         {
             NextRound();
         }
-
-        if (gameFinished)
-            return;
-
-        HaveMoney();
     }
 
     void NextRound()
@@ -67,8 +88,28 @@ public class GameManager : MonoBehaviour
         enemySpawner.StartRound(currentRound);
     }
 
-    void HaveMoney()
+    public void UpdateMoneyUI()
     {
-        moneyText.text = "Money " + Money;
+        if (moneyText != null)
+        {
+            moneyText.text = "Money " + Money;
+        }
+    }
+
+    public void AddMoney(int amount)
+    {
+        Money += amount;
+        UpdateMoneyUI();
+    }
+
+    public bool SpendMoney(int amount)
+    {
+        if (Money < amount)
+            return false;
+
+        Money -= amount;
+        UpdateMoneyUI();
+
+        return true;
     }
 }

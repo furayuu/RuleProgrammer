@@ -4,6 +4,8 @@ public class EnemyHealth : MonoBehaviour
 {
     [Header("Health")]
     public int maxHP = 3;
+    [Header("Reward")]
+    public int moneyReward = 5;
 
     private int currentHP;
     private bool isDead = false;
@@ -54,12 +56,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        gameManager.Money += 5;
+        GameManager.Instance.AddMoney(moneyReward);
 
         isDead = true;
 
-        animator.SetTrigger("Die");        
+        animator.SetTrigger("Die");
 
-        Destroy(gameObject, 0.5f);   
+        Destroy(gameObject, 0.5f);
     }
 }

@@ -21,9 +21,9 @@ public class BuildPoint : MonoBehaviour
         if (hasAlly)
             return;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log(gameObject.name + " Press E");
+            Debug.Log(gameObject.name + " Press F");
             BuildManager.Instance.OpenBuildMenu(this);
         }
     }

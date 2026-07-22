@@ -80,9 +80,9 @@ public class BuildManager : MonoBehaviour
             return;
         }
 
-        if (!GameManager.Instance.SpendGold(appleCost))
+        if (!GameManager.Instance.SpendMoney(appleCost))
         {
-            Debug.Log("Not enough gold");
+            Debug.Log("Not enough money");
             return;
         }
 
