@@ -95,12 +95,12 @@ public class Projectile : MonoBehaviour
 
     void KiwiEffect(Collider2D target)
     {
-        Debug.Log("Kiwi Slow");
+        Debug.Log("Kiwi Pierce");
     }
 
     void WatermelonEffect(Collider2D target)
     {
-        Debug.Log("Watermelon Pierce");
+        Debug.Log("Watermelon Explosion");
     }
 
     void OrangeEffect(Collider2D target)
