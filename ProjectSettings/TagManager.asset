@@ -10,6 +10,7 @@ TagManager:
   - JumpTrigger
   - Ally
   - Bullet
+  - Base
   layers:
   - Default
   - TransparentFX

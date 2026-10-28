@@ -53,6 +53,19 @@ public class EnemyBullet : MonoBehaviour
             return;
         }
 
+        if (collision.CompareTag("Base"))
+        {
+            BaseHealth baseHealth = collision.GetComponent<BaseHealth>();
+
+            if (baseHealth != null)
+            {
+                baseHealth.TakeDamage(damage);
+            }
+
+            Destroy(gameObject);
+            return;
+        }
+
         if (collision.CompareTag("Ground"))
         {
             Destroy(gameObject);
