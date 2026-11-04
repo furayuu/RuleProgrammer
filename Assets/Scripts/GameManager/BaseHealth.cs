@@ -62,6 +62,6 @@ public class BaseHealth : MonoBehaviour
     {
         isDead = true;
         Debug.Log("GameOver");
-
+        // 之后可以在这里添加 Game Over UI。
     }
 }

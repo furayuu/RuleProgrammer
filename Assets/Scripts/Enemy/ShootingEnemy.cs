@@ -4,7 +4,7 @@ using UnityEngine;
 public class ShootingEnemy : MonoBehaviour
 {
     [Header("Base Target")]
-    [Tooltip("基地的 Transform。未設定の場合は BaseHealth から自動取得")]
+    [Tooltip("基地のTransform。未設定の場合は BaseHealth から自動取得")]
     public Transform baseTarget;
 
     [Tooltip("基地の射撃範囲")]

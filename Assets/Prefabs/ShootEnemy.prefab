@@ -188,12 +188,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseTarget: {fileID: 0}
-  baseShootRange: 6
-  playerAlertDistance: 6
-  minDistance: 3
+  baseShootRange: 4
+  playerAlertDistance: 4
+  minDistance: 2
   maxDistance: 6
   returnDistanceMargin: 2
-  attackRange: 8
+  attackRange: 6
   shotInterval: 5
   bulletPrefab: {fileID: 7742799474096098468, guid: 93fed8a8ee32da242a055856f05529f4, type: 3}
   firePoint: {fileID: 2881558623762655541}
