@@ -187,12 +187,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb951faaf89d384c8791bd1aaf9911f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minDistance: 5
-  maxDistance: 8
+  baseTarget: {fileID: 0}
+  baseShootRange: 6
+  playerAlertDistance: 6
+  minDistance: 3
+  maxDistance: 6
+  returnDistanceMargin: 2
+  attackRange: 8
   shotInterval: 5
-  targetRefreshTime: 0.2
   bulletPrefab: {fileID: 7742799474096098468, guid: 93fed8a8ee32da242a055856f05529f4, type: 3}
   firePoint: {fileID: 2881558623762655541}
+  targetRefreshTime: 0.2
 --- !u!114 &4808204479487892129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 3
+  moneyReward: 5
 --- !u!1 &4726978496077186074
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class BuildManager : MonoBehaviour
     public GameObject appleAllyPrefab;
 
     [Header("Cost")]
-    public int appleCost = 50;
+    public int appleCost = 15;
 
     private BuildPoint currentBuildPoint;
 

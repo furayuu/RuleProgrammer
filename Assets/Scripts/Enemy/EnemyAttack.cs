@@ -39,5 +39,14 @@ public class EnemyAttack : MonoBehaviour
             ally.TakeDamage(damage);
             attackTimer = attackCooldown;
         }
+
+        BaseHealth baseHealth = other.GetComponent<BaseHealth>();
+
+        if (baseHealth != null)
+        {
+            baseHealth.TakeDamage(damage);
+            attackTimer = attackCooldown;
+            Destroy(gameObject);
+        }
     }
 }

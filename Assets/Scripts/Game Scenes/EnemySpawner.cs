@@ -1,41 +1,79 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("敵のプレハブ（最大3つ）")]
+    [Header("敵の設定")]
     public GameObject[] enemyPrefabs = new GameObject[3];
 
-    [Header("生成ウェイト（数値が大きいほど出現率が高くなる）")]
-    [Tooltip("例：50, 30, 20 の場合、最初の敵が約50%の確率で出現します")]
+    [Header("敵の出現確率")]
     public float[] spawnWeights = new float[3] { 50f, 30f, 20f };
 
+    [Header("スポーン地点")]
     public Transform spawnPoint;
+
+    [Header("ウェーブごとの敵の数")]
+    public int baseEnemyCount = 5;
+    public int extraEnemiesPerRound = 5;
+
+    [Header("敵の生成間隔")]
     public float spawnInterval = 2f;
-    [HideInInspector]
-    public float roundDuration = 30f;
+    public float intervalReductionPerRound = 0.15f;
+    public float minSpawnInterval = 0.5f;
 
     private Coroutine spawnCoroutine;
     private float totalWeight;
 
-    private void Awake()
-    {
-        CalculateTotalWeight();
-    }
+    // 生成した敵のリストを管理する
+    private readonly List<GameObject> spawnedEnemies = new List<GameObject>();
 
-    // Inspectorで値を変更したときに自動で総ウェイトを再計算する
-    private void OnValidate()
-    {
-        CalculateTotalWeight();
-    }
+    // 敵を生成中かどうかを取得する
+    public bool IsSpawning { get; private set; }
 
-    // 総ウェイトを計算する
-    private void CalculateTotalWeight()
+    // 現在生存している敵の数を取得する
+    public int AliveEnemyCount
     {
-        totalWeight = 0f;
-        for (int i = 0; i < spawnWeights.Length && i < enemyPrefabs.Length; i++)
+        get
         {
-            if (enemyPrefabs[i] != null && spawnWeights[i] > 0)
+            // 破棄された敵をリストから削除する
+            spawnedEnemies.RemoveAll(enemy => enemy == null);
+            return spawnedEnemies.Count;
+        }
+    }
+
+    void Awake()
+    {
+        // 敵の出現確率の合計を計算する
+        CalculateTotalWeight();
+    }
+
+    void OnValidate()
+    {
+        // Inspectorで設定を変更したときに確率を再計算する
+        CalculateTotalWeight();
+
+        // 設定値が不正な値にならないように調整する
+        baseEnemyCount = Mathf.Max(1, baseEnemyCount);
+        extraEnemiesPerRound = Mathf.Max(0, extraEnemiesPerRound);
+        spawnInterval = Mathf.Max(0.1f, spawnInterval);
+        intervalReductionPerRound = Mathf.Max(0f, intervalReductionPerRound);
+        minSpawnInterval = Mathf.Max(0.1f, minSpawnInterval);
+    }
+
+    void CalculateTotalWeight()
+    {
+        // 有効な敵Prefabの出現確率を合計する
+        totalWeight = 0f;
+
+        if (enemyPrefabs == null || spawnWeights == null)
+            return;
+
+        int count = Mathf.Min(enemyPrefabs.Length, spawnWeights.Length);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (enemyPrefabs[i] != null && spawnWeights[i] > 0f)
             {
                 totalWeight += spawnWeights[i];
             }
@@ -44,78 +82,123 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartRound(int round)
     {
+        // 以前の生成処理が残っていれば停止する
         if (spawnCoroutine != null)
         {
             StopCoroutine(spawnCoroutine);
+            spawnCoroutine = null;
         }
-        spawnCoroutine = StartCoroutine(SpawnEnemies(round));
+
+        // 破棄された敵をリストから削除する
+        spawnedEnemies.RemoveAll(enemy => enemy == null);
+
+        // 前のウェーブの敵が残っていないか確認する
+        if (spawnedEnemies.Count > 0)
+        {
+            Debug.LogWarning("前のウェーブの敵がまだ残っています。");
+            return;
+        }
+
+        // スポーン地点が設定されているか確認する
+        if (spawnPoint == null)
+        {
+            Debug.LogError("EnemySpawnerのSpawn Pointが設定されていません。");
+            return;
+        }
+
+        // ウェーブ番号に応じて敵の数を計算する
+        int enemyCount = baseEnemyCount + (round - 1) * extraEnemiesPerRound;
+
+        // ウェーブ番号に応じて敵の生成間隔を短くする
+        float interval = Mathf.Max(
+            minSpawnInterval,
+            spawnInterval - (round - 1) * intervalReductionPerRound
+        );
+
+        // 敵の生成処理を開始する
+        spawnCoroutine = StartCoroutine(SpawnEnemies(enemyCount, interval));
     }
 
-    /// <summary>
-    /// 重みに基づいてランダムに敵のプレハブを返す
-    /// </summary>
-    private GameObject GetRandomEnemyPrefab()
+    IEnumerator SpawnEnemies(int enemyCount, float interval)
     {
-        if (totalWeight <= 0 || enemyPrefabs.Length == 0)
-        {
-            Debug.LogWarning("有効な敵のプレハブが設定されていません！");
-            return null;
-        }
-
-        float randomValue = Random.Range(0f, totalWeight);
-        float cumulative = 0f;
-
-        for (int i = 0; i < enemyPrefabs.Length; i++)
-        {
-            if (enemyPrefabs[i] != null && spawnWeights[i] > 0)
-            {
-                cumulative += spawnWeights[i];
-                if (randomValue < cumulative)
-                {
-                    return enemyPrefabs[i];
-                }
-            }
-        }
-
-        // フォールバック：最初に見つかった有効なプレハブを返す
-        for (int i = 0; i < enemyPrefabs.Length; i++)
-        {
-            if (enemyPrefabs[i] != null)
-                return enemyPrefabs[i];
-        }
-        return null;
-    }
-
-    IEnumerator SpawnEnemies(int round)
-    {
-        int enemyCount = round * 5;
-
-        spawnInterval = roundDuration / enemyCount;
+        // 敵の生成中フラグを有効にする
+        IsSpawning = true;
 
         for (int i = 0; i < enemyCount; i++)
         {
-            GameObject prefabToSpawn = GetRandomEnemyPrefab();
+            // 出現させる敵Prefabをランダムに選択する
+            GameObject prefab = GetRandomEnemyPrefab();
 
-            if (prefabToSpawn != null && spawnPoint != null)
+            if (prefab != null)
             {
-                Instantiate(prefabToSpawn, spawnPoint.position, Quaternion.identity);
+                // スポーン地点に敵を生成してリストに登録する
+                GameObject enemy = Instantiate(
+                    prefab,
+                    spawnPoint.position,
+                    Quaternion.identity
+                );
+
+                spawnedEnemies.Add(enemy);
             }
             else
             {
-                Debug.LogWarning("敵を生成できません：プレハブまたはスポーンポイントが設定されていません");
+                Debug.LogWarning("生成可能な敵Prefabが設定されていません。");
             }
 
-            yield return new WaitForSeconds(spawnInterval);
+            // 次の敵を生成するまで待機する
+            if (i < enemyCount - 1)
+            {
+                yield return new WaitForSeconds(interval);
+            }
         }
+
+        // 敵の生成が完了したことを通知する
+        IsSpawning = false;
+        spawnCoroutine = null;
     }
 
-    // 実行時に動的に生成確率を変更したい場合に使用（任意）
+    GameObject GetRandomEnemyPrefab()
+    {
+        // 有効なPrefabと出現確率が存在するか確認する
+        if (enemyPrefabs == null || spawnWeights == null || totalWeight <= 0f)
+            return null;
+
+        // 出現確率に基づいて敵を選択する
+        float randomValue = Random.Range(0f, totalWeight);
+        float cumulativeWeight = 0f;
+
+        int count = Mathf.Min(enemyPrefabs.Length, spawnWeights.Length);
+
+        for (int i = 0; i < count; i++)
+        {
+            // 未設定のPrefabや無効な確率は無視する
+            if (enemyPrefabs[i] == null || spawnWeights[i] <= 0f)
+                continue;
+
+            cumulativeWeight += spawnWeights[i];
+
+            if (randomValue < cumulativeWeight)
+            {
+                return enemyPrefabs[i];
+            }
+        }
+
+        // 誤差などで選択できなかった場合は、最後の有効なPrefabを返す
+        for (int i = count - 1; i >= 0; i--)
+        {
+            if (enemyPrefabs[i] != null && spawnWeights[i] > 0f)
+            {
+                return enemyPrefabs[i];
+            }
+        }
+
+        return null;
+    }
+
     public void SetSpawnWeights(float[] newWeights)
     {
-        if (newWeights != null && newWeights.Length == spawnWeights.Length)
-        {
-            spawnWeights = newWeights;
-            CalculateTotalWeight();
-        }
+        // 外部から出現確率を変更し、合計値を再計算する
+        spawnWeights = newWeights;
+        CalculateTotalWeight();
     }
 }
