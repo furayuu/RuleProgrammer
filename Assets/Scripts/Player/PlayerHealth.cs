@@ -1,79 +1,72 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health")]
     public int maxHP = 10;
 
+    [Header("HP UI")]
+    public TMP_Text healthText;
+
     private int currentHP;
     private bool isDead = false;
-
     private Animator animator;
 
-    // 当前血量
-    public int CurrentHP
-    {
-        get { return currentHP; }
-    }
+    public int CurrentHP { get { return currentHP; } }
 
-    // 当前血量百分比（0~1）
     public float HealthPercent
     {
-        get { return (float)currentHP / maxHP; }
+        get { return maxHP > 0 ? (float)currentHP / maxHP : 0f; }
     }
 
     void Start()
     {
+        maxHP = Mathf.Max(1, maxHP);
         currentHP = maxHP;
         animator = GetComponent<Animator>();
+
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage)
     {
-        if (isDead)
-            return;
+        if (isDead || damage <= 0) return;
 
         currentHP -= damage;
-
-        // 防止血量小于0
         currentHP = Mathf.Max(currentHP, 0);
 
         Debug.Log("Player HP : " + currentHP);
 
-        animator.SetTrigger("Hit");
+        if (animator != null)
+            animator.SetTrigger("Hit");
+
+        UpdateHealthUI();
 
         if (currentHP <= 0)
-        {
             Die();
-        }
     }
 
     public void Heal(int amount)
     {
-        if (isDead)
-            return;
+        if (isDead || amount <= 0) return;
 
         currentHP += amount;
+        currentHP = Mathf.Min(currentHP, maxHP);
 
-        if (currentHP > maxHP)
-            currentHP = maxHP;
+        UpdateHealthUI();
+    }
 
-        Debug.Log("Player HP : " + currentHP);
+    void UpdateHealthUI()
+    {
+        if (healthText != null)
+            healthText.text = "HP:" + currentHP + "/" + maxHP;
     }
 
     void Die()
     {
         isDead = true;
-
         Debug.Log("Game Over");
-
-        // 如果以后有死亡动画，可以改成播放动画
-        // animator.SetTrigger("Die");
-
-        // Prototype阶段先禁用玩家
         gameObject.SetActive(false);
-
-        // 以后这里可以通知GameManager
-        // GameManager.Instance.GameOver();
     }
 }

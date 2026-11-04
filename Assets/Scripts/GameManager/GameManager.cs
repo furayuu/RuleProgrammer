@@ -196,14 +196,8 @@ public class GameManager : MonoBehaviour
         if (roundText == null)
             return;
 
-        if (isIntermission)
-        {
-            roundText.text = "Next: Wave " + currentRound + " / " + maxRound;
-        }
-        else
-        {
-            roundText.text = "Wave " + currentRound + " / " + maxRound;
-        }
+        roundText.text = "Wave " + currentRound + " / " + maxRound;
+        
     }
 
     void UpdateTimerUI()
