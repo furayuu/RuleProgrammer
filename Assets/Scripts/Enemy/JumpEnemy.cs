@@ -11,11 +11,12 @@ public class JumpEnemy : MonoBehaviour
     public float jumpCooldown = 0.5f;
 
     [Header("Base Target")]
-    [Tooltip("未設定の場合は BaseHealth から自動取得")]
+    [Tooltip("未設定の場合はBaseHealthから自動取得")]
     public Transform baseTarget;
 
     private Rigidbody2D rb;
     private EnemyMove enemyMove;
+    private EnemyHealth enemyHealth;
 
     private float jumpTimer = 0f;
 
@@ -23,6 +24,7 @@ public class JumpEnemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         enemyMove = GetComponent<EnemyMove>();
+        enemyHealth = GetComponent<EnemyHealth>();
 
         if (rb == null)
         {
@@ -38,10 +40,10 @@ public class JumpEnemy : MonoBehaviour
             return;
         }
 
-        // EnemyMove にプレイヤーを追わせず、このスクリプトで移動する
+        // EnemyMoveによるプレイヤー追跡を無効にする
         enemyMove.autoMove = false;
 
-        // 基地を自動取得
+        // 基地を自動取得する
         if (baseTarget == null)
         {
             BaseHealth baseHealth = FindObjectOfType<BaseHealth>();
@@ -63,12 +65,19 @@ public class JumpEnemy : MonoBehaviour
 
     void Update()
     {
+        // 死亡した敵は移動しない
+        if (enemyHealth != null && enemyHealth.IsDead)
+        {
+            enemyMove.Move(0f);
+            return;
+        }
+
         if (jumpTimer > 0f)
         {
             jumpTimer -= Time.deltaTime;
         }
 
-        // 基地に向かって移動
+        // 基地に向かって移動する
         if (baseTarget != null)
         {
             float direction = Mathf.Sign(
@@ -85,6 +94,10 @@ public class JumpEnemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // 死亡した敵はジャンプできない
+        if (enemyHealth != null && enemyHealth.IsDead)
+            return;
+
         if (!other.CompareTag("JumpTrigger"))
             return;
 
@@ -96,7 +109,7 @@ public class JumpEnemy : MonoBehaviour
         if (trigger == null)
             return;
 
-        // 現在の進行方向
+        // 現在の進行方向を確認する
         bool facingRight = transform.localScale.x > 0f;
 
         // 右向き専用のトリガー
@@ -122,6 +135,7 @@ public class JumpEnemy : MonoBehaviour
 
     void Jump()
     {
+        // ジャンプする
         rb.velocity = new Vector2(
             rb.velocity.x,
             jumpForce

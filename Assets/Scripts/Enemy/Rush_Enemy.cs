@@ -1,10 +1,11 @@
+
 using System.Collections;
 using UnityEngine;
 
 public class Rush_Enemy : MonoBehaviour
 {
     [Header("Base Target")]
-    [Tooltip("基地の Transform。未設定の場合は BaseHealth から自動取得")]
+    [Tooltip("基地のTransform。未設定の場合はBaseHealthから自動取得")]
     public Transform baseTarget;
 
     [Header("Move Settings")]
@@ -29,6 +30,7 @@ public class Rush_Enemy : MonoBehaviour
 
     private EnemyMove enemyMove;
     private Rigidbody2D rb;
+    private EnemyHealth enemyHealth;
 
     private bool isBusy = false;
     private bool isDead = false;
@@ -36,6 +38,7 @@ public class Rush_Enemy : MonoBehaviour
     void Start()
     {
         enemyMove = GetComponent<EnemyMove>();
+        enemyHealth = GetComponent<EnemyHealth>();
 
         if (enemyMove == null)
         {
@@ -53,10 +56,10 @@ public class Rush_Enemy : MonoBehaviour
             return;
         }
 
-        // EnemyMove にプレイヤーを追わせず、このスクリプトで移動を制御する
+        // EnemyMoveによるプレイヤー追跡を無効にする
         enemyMove.autoMove = false;
 
-        // Inspector で基地が設定されていなければ BaseHealth から探す
+        // Inspectorで基地が設定されていない場合は自動取得する
         if (baseTarget == null)
         {
             BaseHealth baseHealth = FindObjectOfType<BaseHealth>();
@@ -78,22 +81,24 @@ public class Rush_Enemy : MonoBehaviour
 
     void Update()
     {
-        if (isDead || baseTarget == null || isBusy)
+        // 死亡した敵は移動しない
+        if (isDead || (enemyHealth != null && enemyHealth.IsDead)
+            || baseTarget == null || isBusy)
             return;
 
-        // 基地との水平方向の距離
+        // 基地との水平方向の距離を計算する
         float distance = Mathf.Abs(
             baseTarget.position.x - transform.position.x
         );
 
-        // 接近するまでは通常移動
+        // 基地に近づくまでは通常移動する
         if (distance > chargeStartDistance)
         {
             MoveToBase();
         }
         else
         {
-            // 基地に近づいたら突進開始
+            // 基地に近づいたら突進を開始する
             StartCoroutine(RushRoutine());
         }
     }
@@ -112,28 +117,30 @@ public class Rush_Enemy : MonoBehaviour
         isBusy = true;
         enemyMove.canMove = false;
 
-        // 蓄力中はいったん停止
+        // 突進前に停止する
         rb.velocity = new Vector2(0f, rb.velocity.y);
         enemyMove.Move(0f);
 
         yield return new WaitForSeconds(chargeTime);
 
-        if (isDead || baseTarget == null)
+        if (isDead || (enemyHealth != null && enemyHealth.IsDead)
+            || baseTarget == null)
             yield break;
 
-        // 蓄力後、基地の方向へ突進
+        // 蓄力後、基地に向かって突進する
         float direction = Mathf.Sign(
             baseTarget.position.x - transform.position.x
         );
 
         float timer = 0f;
 
-        while (timer < rushDuration && !isDead)
+        while (timer < rushDuration && !isDead
+            && (enemyHealth == null || !enemyHealth.IsDead))
         {
             if (baseTarget == null)
                 break;
 
-            // 突進中も基地の方向を確認
+            // 突進中も基地の方向を確認する
             direction = Mathf.Sign(
                 baseTarget.position.x - transform.position.x
             );
@@ -147,24 +154,32 @@ public class Rush_Enemy : MonoBehaviour
             yield return null;
         }
 
-        if (isDead)
+        if (isDead || (enemyHealth != null && enemyHealth.IsDead))
             yield break;
 
-        // 突進終了後は停止
+        // 突進終了後に停止する
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
         enemyMove.canMove = true;
 
         yield return new WaitForSeconds(cooldown);
 
+        if (isDead || (enemyHealth != null && enemyHealth.IsDead))
+            yield break;
+
         isBusy = false;
     }
 
-    // 敵が基地に接触して EnemyAttack から破棄される前に、
-    // 必要に応じて死亡状態を通知できるようにする
+    // 敵の死亡時に呼び出す
     public void MarkDead()
     {
         isDead = true;
+
+        // 実行中のコルーチンを停止する
         StopAllCoroutines();
+
+        // 物理的な移動を停止する
+        if (rb != null)
+            rb.velocity = Vector2.zero;
     }
 }
