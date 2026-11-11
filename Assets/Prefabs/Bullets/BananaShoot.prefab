@@ -161,9 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 629301fb1a4ed6b4cb40504bafd7b1bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 1
   speed: 8
-  lifetime: 5
+  lifetime: 3
   splitBananaPrefab: {fileID: 4151207390520861030}
   splitCount: 4
   splitSearchRadius: 6
