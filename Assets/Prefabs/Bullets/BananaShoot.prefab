@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 1138833766598688776}
   - component: {fileID: 997867375530047394}
   - component: {fileID: 3737118299037838009}
-  - component: {fileID: 6503196447905077525}
+  - component: {fileID: 8373798176345515657}
+  - component: {fileID: -1689006944012934914}
   m_Layer: 0
   m_Name: BananaShoot
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4151207390520861030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.2, y: -1.44, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -433553667
+  m_SortingLayer: 1
   m_SortingOrder: 2
   m_Sprite: {fileID: -5728686177044832811, guid: b1f24b3bc2e2f1d4b858657ad5c115a0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -121,7 +122,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.16
+  m_Radius: 0.15
 --- !u!50 &3737118299037838009
 Rigidbody2D:
   serializedVersion: 4
@@ -149,7 +150,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &6503196447905077525
+--- !u!114 &8373798176345515657
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,12 +159,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 4151207390520861030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 629301fb1a4ed6b4cb40504bafd7b1bd, type: 3}
+  m_Script: {fileID: 11500000, guid: a26ac299f631add48bbdee3d25cc907a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  speed: 8
-  lifetime: 3
-  splitBananaPrefab: {fileID: 4151207390520861030}
-  splitCount: 4
-  splitSearchRadius: 6
+  lifeTime: 3
+--- !u!114 &-1689006944012934914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4151207390520861030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4cd5a99a05fea4ca9c2ae6d8585d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

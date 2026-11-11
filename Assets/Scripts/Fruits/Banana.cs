@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class Banana : MonoBehaviour
 {
-    [Header("UŒ‚İ’è")]
+
     public float damage = 10f;
     public float speed = 8f;
     public float lifetime = 5f;
 
-    [Header("•ª—ôİ’è")]
     public GameObject splitBananaPrefab;
     public int splitCount = 4;
     public float splitSearchRadius = 6f;

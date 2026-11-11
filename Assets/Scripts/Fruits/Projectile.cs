@@ -1,12 +1,20 @@
+
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [Header("Projectile")]
-    public FruitType fruitType;
-
+    [Header("弾の設定")]
     public int damage = 1;
     public float lifeTime = 3f;
+
+    private FruitEffectBase fruitEffect;
+    private bool hasHit = false;
+
+    void Awake()
+    {
+        // このオブジェクトに設定された特殊効果を取得する
+        fruitEffect = GetComponent<FruitEffectBase>();
+    }
 
     void Start()
     {
@@ -15,106 +23,37 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 命中敌人
+        // すでに命中している場合は処理しない
+        if (hasHit)
+            return;
+
+        // 敵に命中した場合
         if (other.CompareTag("Enemy"))
         {
             EnemyHealth enemy =
-                other.GetComponent<EnemyHealth>();
+                other.GetComponentInParent<EnemyHealth>();
 
             if (enemy != null)
             {
+                hasHit = true;
+
+                // 基本ダメージを与える
                 enemy.TakeDamage(damage);
+
+                // フルーツ固有の特殊効果を実行する
+                if (fruitEffect != null)
+                {
+                    fruitEffect.Apply(enemy.transform);
+                }
+
+                Destroy(gameObject);
             }
-
-            ApplyFruitEffect(other);
-
-            Destroy(gameObject);
         }
 
-        // 撞到地面或墙体
-        if (other.CompareTag("Ground"))
+        // 地面や壁に衝突した場合
+        else if (other.CompareTag("Ground"))
         {
             Destroy(gameObject);
         }
-    }
-
-    void ApplyFruitEffect(Collider2D target)
-    {
-        switch (fruitType)
-        {
-            case FruitType.Apple:
-                AppleEffect(target);
-                break;
-
-            case FruitType.Banana:
-                BananaEffect(target);
-                break;
-
-            case FruitType.Cherry:
-                CherryEffect(target);
-                break;
-
-            case FruitType.Kiwi:
-                KiwiEffect(target);
-                break;
-
-            case FruitType.Watermelon:
-                WatermelonEffect(target);
-                break;
-
-            case FruitType.Orange:
-                OrangeEffect(target);
-                break;
-
-            case FruitType.Strawberry:
-                StrawberryEffect(target);
-                break;
-
-            case FruitType.Pineapple:
-                PineappleEffect(target);
-                break;
-        }
-    }
-
-    // ===== Fruit Effects =====
-
-    void AppleEffect(Collider2D target)
-    {
-        // 普通攻击
-    }
-
-    void BananaEffect(Collider2D target)
-    {
-        Debug.Log("Banana Split");
-    }
-
-    void CherryEffect(Collider2D target)
-    {
-        Debug.Log("Cherry Explosion");
-    }
-
-    void KiwiEffect(Collider2D target)
-    {
-        Debug.Log("Kiwi Pierce");
-    }
-
-    void WatermelonEffect(Collider2D target)
-    {
-        Debug.Log("Watermelon Explosion");
-    }
-
-    void OrangeEffect(Collider2D target)
-    {
-        Debug.Log("Orange Bounce");
-    }
-
-    void StrawberryEffect(Collider2D target)
-    {
-        Debug.Log("Strawberry Heal");
-    }
-
-    void PineappleEffect(Collider2D target)
-    {
-        Debug.Log("Pineapple Trap");
     }
 }
