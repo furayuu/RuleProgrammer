@@ -12182,7 +12182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directProjectilePrefab: {fileID: 4151207390520861030, guid: c1e2b7317f6051c4997b8190c757d56b, type: 3}
-  throwProjectilePrefab: {fileID: 7649815238137498395, guid: d0632d5c8cad4e845a298b7900a55535, type: 3}
+  throwProjectilePrefab: {fileID: 4151207390520861030, guid: 82c1351f18cf92b49bdd5587997cd5fa, type: 3}
   firePoint: {fileID: 139718671}
   attackCooldown: 0.5
   bulletSpeed: 10
