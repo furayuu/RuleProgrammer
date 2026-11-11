@@ -8,6 +8,9 @@ public class BananaEffect : FruitEffectBase
     public bool canSplit = true;
     public int maxSplitCount = 3;
 
+    [Header("分裂弾のPrefab")]
+    public GameObject splitArcPrefab;
+
     [Header("索敵設定")]
     public float searchRadius = 5f;
 
@@ -22,13 +25,20 @@ public class BananaEffect : FruitEffectBase
         if (!canSplit || target == null)
             return;
 
+        if (splitArcPrefab == null)
+        {
+            Debug.LogWarning("分裂用のPrefabが設定されていません。");
+            return;
+        }
+
+        // 最初に命中した敵を取得する
         EnemyHealth firstEnemy =
             target.GetComponentInParent<EnemyHealth>();
 
         if (firstEnemy == null)
             return;
 
-        // 分裂位置を保存する
+        // 命中位置を保存する
         Vector3 splitPosition = transform.position;
 
         // 周囲の敵を検索する
@@ -68,6 +78,7 @@ public class BananaEffect : FruitEffectBase
             return distanceA.CompareTo(distanceB);
         });
 
+        // 分裂数を決定する
         int splitCount =
             Mathf.Min(maxSplitCount, enemies.Count);
 
@@ -79,9 +90,9 @@ public class BananaEffect : FruitEffectBase
             if (enemy == null)
                 continue;
 
-            // 現在のバナナと同じPrefab構成を複製する
+            // 分裂用の抛射Prefabを生成する
             GameObject miniBanana = Instantiate(
-                gameObject,
+                splitArcPrefab,
                 splitPosition,
                 Quaternion.identity
             );
@@ -95,7 +106,7 @@ public class BananaEffect : FruitEffectBase
             if (arc == null || miniEffect == null)
             {
                 Debug.LogWarning(
-                    "Banana Prefabに必要なコンポーネントがありません。"
+                    "分裂用PrefabにProjectileArcまたはBananaEffectがありません。"
                 );
 
                 Destroy(miniBanana);
