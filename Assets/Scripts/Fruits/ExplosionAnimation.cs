@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class CherryExplosionAnimation : MonoBehaviour
+public class ExplosionAnimation : MonoBehaviour
 {
     [Header("回転設定")]
     public float rotationAngle = 25f;
