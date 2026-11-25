@@ -1,110 +1,130 @@
 
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PineappleTrap : MonoBehaviour
 {
     [Header("Trap Settings")]
-    public float fuseTime = 3f;
-    public float explosionRadius = 3f;
-    public int explosionDamage = 10;
+    public float activationDelay = 0.5f;
+    public float lifeTime = 10f;
 
-    [Header("Explosion Effect")]
+    [Header("Explosion Settings")]
+    public float explosionRadius = 3f;
+    public int explosionDamage = 5;
+    public float explosionHeight = 1.5f;
     public GameObject explosionEffect;
 
+    private Collider2D[] trapColliders;
+    private SpriteRenderer[] spriteRenderers;
+
+    private bool isActive = false;
     private bool hasExploded = false;
 
-    // ƒgƒ‰ƒbƒv‚Ìİ’è
-    public void Initialize(
-        float time,
-        float radius,
-        int damage)
+    void Awake()
     {
-        fuseTime = time;
-        explosionRadius = radius;
-        explosionDamage = damage;
-
-        CancelInvoke(nameof(Explode));
-        Invoke(nameof(Explode), fuseTime);
+        trapColliders = GetComponentsInChildren<Collider2D>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
-    void Start()
+    IEnumerator Start()
     {
-        // Initialize‚ªŒÄ‚Î‚ê‚È‚©‚Á‚½ê‡‚Ìİ’è
-        if (!IsInvoking(nameof(Explode)))
-        {
-            Invoke(nameof(Explode), fuseTime);
-        }
-    }
+        // ãƒˆãƒ©ãƒƒãƒ—ã‚’ä¸€æ™‚çš„ã«ç„¡åŠ¹ã«ã™ã‚‹
+        SetTrapVisible(false);
+        SetTrapCollider(false);
 
-    // ”š”­ˆ—
-    void Explode()
-    {
-        if (hasExploded) return;
+        // è¨­ç½®å¾Œã®èµ·å‹•å¾…ã¡æ™‚é–“
+        yield return new WaitForSeconds(activationDelay);
 
-        hasExploded = true;
+        SetTrapVisible(true);
+        SetTrapCollider(true);
 
-        // ”š”­ƒGƒtƒFƒNƒg‚ğ¶¬
-        if (explosionEffect != null)
-        {
-            Instantiate(
-                explosionEffect,
-                transform.position,
-                Quaternion.identity
-            );
-        }
+        isActive = true;
 
-        // ”š”­”ÍˆÍ“à‚Ì“G‚ğæ“¾
-        Collider2D[] enemies =
-            Physics2D.OverlapCircleAll(
-                transform.position,
-                explosionRadius
-            );
-
-        // ”ÍˆÍ“à‚Ì“G‚Éƒ_ƒ[ƒW
-        foreach (Collider2D enemyCollider in enemies)
-        {
-            if (!enemyCollider.CompareTag("Enemy"))
-            {
-                continue;
-            }
-
-            EnemyHealth enemy =
-                enemyCollider.GetComponent<EnemyHealth>();
-
-            if (enemy == null)
-            {
-                enemy =
-                    enemyCollider.GetComponentInParent<EnemyHealth>();
-            }
-
-            if (enemy != null)
-            {
-                enemy.TakeDamage(explosionDamage);
-            }
-        }
-
-        Debug.Log("Pineapple Trap Explosion!");
+        // åˆ¶é™æ™‚é–“å¾Œã«ãƒˆãƒ©ãƒƒãƒ—ã‚’ç ´æ£„ã™ã‚‹
+        yield return new WaitForSeconds(lifeTime);
 
         Destroy(gameObject);
     }
 
-    // ‹N”šŠÔ‚Ì‹­‰»
-    public void UpgradeFuseTime(float amount)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        fuseTime = Mathf.Max(0.1f, fuseTime - amount);
+        if (!isActive || hasExploded)
+            return;
+
+        if (!other.CompareTag("Enemy"))
+            return;
+
+        Explode();
     }
 
-    // ”š”­”ÍˆÍ‚Ì‹­‰»
-    public void UpgradeExplosionRadius(float amount)
+    // ãƒˆãƒ©ãƒƒãƒ—ã‚’çˆ†ç™ºã•ã›ã‚‹
+    private void Explode()
     {
-        explosionRadius += amount;
+        if (hasExploded)
+            return;
+
+        hasExploded = true;
+        Vector3 explosionPosition = transform.position + Vector3.up * explosionHeight;
+
+        // çˆ†ç™ºã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
+        if (explosionEffect != null)
+        {
+            
+            Instantiate(
+                explosionEffect,
+                explosionPosition,
+                Quaternion.identity
+            );
+        }
+
+        // çˆ†ç™ºç¯„å›²å†…ã®æ•µã‚’æ¤œç´¢ã™ã‚‹
+        Collider2D[] colliders =
+         Physics2D.OverlapCircleAll(
+                   explosionPosition,
+                   explosionRadius
+             );
+
+        HashSet<EnemyHealth> damagedEnemies =
+            new HashSet<EnemyHealth>();
+
+        foreach (Collider2D col in colliders)
+        {
+            EnemyHealth enemy =
+                col.GetComponentInParent<EnemyHealth>();
+
+            if (enemy == null || enemy.IsDead)
+                continue;
+
+            // åŒã˜æ•µã¸ã®é‡è¤‡ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’é˜²ã
+            if (!damagedEnemies.Add(enemy))
+                continue;
+
+            enemy.TakeDamage(explosionDamage);
+        }
+
+        Destroy(gameObject);
     }
 
-    // Sceneƒrƒ…[‚É”š”­”ÍˆÍ‚ğ•\¦
+    private void SetTrapVisible(bool visible)
+    {
+        foreach (SpriteRenderer sr in spriteRenderers)
+        {
+            sr.enabled = visible;
+        }
+    }
+
+    private void SetTrapCollider(bool enabled)
+    {
+        foreach (Collider2D col in trapColliders)
+        {
+            col.enabled = enabled;
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(
             transform.position,
             explosionRadius

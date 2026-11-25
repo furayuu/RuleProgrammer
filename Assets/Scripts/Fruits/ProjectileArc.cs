@@ -100,6 +100,11 @@ public class ProjectileArc : MonoBehaviour
             {
                 HitTarget(target);
             }
+            else if (fruitEffect != null)
+            {
+                // 地面に着地したときの特殊効果を実行する
+                fruitEffect.OnGroundHit();
+            }
 
             Destroy(gameObject);
             return;
@@ -121,6 +126,10 @@ public class ProjectileArc : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
+            // パイナップルは敵に当たっても着地するまで飛び続ける
+            if (fruitEffect is PineappleEffect)
+                return;
+
             HitTarget(other.transform);
             Destroy(gameObject);
         }

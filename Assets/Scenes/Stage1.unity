@@ -11669,14 +11669,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdfdd685c349df40a83771b38c69889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  directProjectilePrefab: {fileID: 6409143502665535053, guid: 7e4ea2d6d46782641b2ced5c99a5fb1d, type: 3}
-  throwProjectilePrefab: {fileID: 3893251312176767823, guid: 4df3de597f871c44081b1b05fa2bed1d, type: 3}
+  directProjectilePrefab: {fileID: 4068164847485520656, guid: bd1f9cdd6ebfa0547b97d537b4d05b6d, type: 3}
+  throwProjectilePrefab: {fileID: 8868662418253695556, guid: f5ab1df64f88a354fade9091dc8fa814, type: 3}
   firePoint: {fileID: 139718671}
   attackCooldown: 0.5
   bulletSpeed: 10
   throwHeight: 3
   throwDuration: 0.8
   maxThrowDistance: 6
+  strawberryLockRadius: 3
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
