@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 516570730520593663}
   - component: {fileID: 1772492687788955810}
   - component: {fileID: 37199379422816496}
+  - component: {fileID: 4728919253932012522}
   m_Layer: 0
-  m_Name: CherrieShoot
-  m_TagString: Untagged
+  m_Name: CherryArc
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +117,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -137,7 +138,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -148,7 +149,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &37199379422816496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,9 +162,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 745b72ec3c4eb984798099036a366ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruitType: 2
-  damage: 1
-  lifeTime: 3
   explosionRadius: 3
-  explosionDamage: 3
-  explosionEffect: {fileID: 0}
+  explosionDamage: 1
+  damageMultiplier: 1
+  explosionEffect: {fileID: 8797989010409973779, guid: 0e3519332a8d0494d98e9158d5b831a7, type: 3}
+--- !u!114 &4728919253932012522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6842776215101728217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8d4fe437401af4a849b66b65661a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1

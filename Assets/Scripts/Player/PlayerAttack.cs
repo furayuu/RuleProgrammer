@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,10 +19,10 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Throw Attack")]
 
-    [Tooltip("抛物线高度")]
+    [Tooltip("抛物線高度")]
     public float throwHeight = 3f;
 
-    [Tooltip("基础飞行时间")]
+    [Tooltip("基本飛行時間")]
     public float throwDuration = 0.8f;
 
     [Header("Throw Range")]
@@ -31,12 +32,8 @@ public class PlayerAttack : MonoBehaviour
     public LayerMask groundLayer;
 
     [Header("Upgrades")]
-
-
     public float damageMultiplier = 1f;
-
     public float attackSpeedMultiplier = 1f;
-
     public float throwSpeedMultiplier = 1f;
 
     void Update()
@@ -87,6 +84,7 @@ public class PlayerAttack : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
         }
     }
+
     void ShootDirect()
     {
         Vector3 mousePos =
@@ -101,6 +99,7 @@ public class PlayerAttack : MonoBehaviour
                 firePoint.position,
                 Quaternion.identity
             );
+
         Projectile projectile =
             bullet.GetComponent<Projectile>();
 
@@ -110,6 +109,16 @@ public class PlayerAttack : MonoBehaviour
                 Mathf.RoundToInt(
                     projectile.damage * damageMultiplier
                 );
+        }
+
+        // チェリーの爆発ダメージにも倍率を適用する
+        CherryEffect cherryEffect =
+            bullet.GetComponent<CherryEffect>();
+
+        if (cherryEffect != null)
+        {
+            cherryEffect.damageMultiplier =
+                damageMultiplier;
         }
 
         Rigidbody2D rb =
@@ -126,6 +135,7 @@ public class PlayerAttack : MonoBehaviour
                 new Vector3(-1, 1, 1);
         }
     }
+
     void ShootThrow()
     {
         Vector3 mousePos =
@@ -134,8 +144,9 @@ public class PlayerAttack : MonoBehaviour
             );
 
         mousePos.z = 0;
-        
-        Vector3 direction = mousePos - firePoint.position;
+
+        Vector3 direction =
+            mousePos - firePoint.position;
 
         direction.z = 0;
 
@@ -169,6 +180,7 @@ public class PlayerAttack : MonoBehaviour
                 firePoint.position,
                 Quaternion.identity
             );
+
         ProjectileArc arc =
             bullet.GetComponent<ProjectileArc>();
 
@@ -178,6 +190,16 @@ public class PlayerAttack : MonoBehaviour
                 Mathf.RoundToInt(
                     arc.damage * damageMultiplier
                 );
+        }
+
+        // チェリーの爆発ダメージにも倍率を適用する
+        CherryEffect cherryEffect =
+            bullet.GetComponent<CherryEffect>();
+
+        if (cherryEffect != null)
+        {
+            cherryEffect.damageMultiplier =
+                damageMultiplier;
         }
 
         arc.Initialize(

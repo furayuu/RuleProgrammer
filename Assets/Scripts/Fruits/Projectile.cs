@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // すでに命中している場合は処理しない
+        // すでに破棄される弾は処理しない
         if (hasHit)
             return;
 
@@ -33,19 +33,32 @@ public class Projectile : MonoBehaviour
             EnemyHealth enemy =
                 other.GetComponentInParent<EnemyHealth>();
 
-            if (enemy != null)
+            if (enemy == null)
+                return;
+
+            // 同じ敵への重複攻撃を防ぐ
+            if (
+                fruitEffect != null &&
+                !fruitEffect.CanHitTarget(enemy.transform)
+            )
+                return;
+
+            // 基本ダメージを与える
+            enemy.TakeDamage(damage);
+
+            // フルーツ固有の特殊効果を実行する
+            if (fruitEffect != null)
+            {
+                fruitEffect.Apply(enemy.transform);
+            }
+
+            // 特殊効果の設定に応じて弾を破棄する
+            if (
+                fruitEffect == null ||
+                fruitEffect.ShouldDestroyProjectile
+            )
             {
                 hasHit = true;
-
-                // 基本ダメージを与える
-                enemy.TakeDamage(damage);
-
-                // フルーツ固有の特殊効果を実行する
-                if (fruitEffect != null)
-                {
-                    fruitEffect.Apply(enemy.transform);
-                }
-
                 Destroy(gameObject);
             }
         }
@@ -53,6 +66,7 @@ public class Projectile : MonoBehaviour
         // 地面や壁に衝突した場合
         else if (other.CompareTag("Ground"))
         {
+            hasHit = true;
             Destroy(gameObject);
         }
     }

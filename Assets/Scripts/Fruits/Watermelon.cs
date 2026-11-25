@@ -28,7 +28,7 @@ public class Watermelon : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
-    // ’e‚ÌˆÚ“®•ûŒü‚ğİ’è
+    // ï¿½eï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
     public void SetDirection(Vector2 direction)
     {
         if (rb != null)
@@ -39,7 +39,7 @@ public class Watermelon : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // “G‚É–½’†
+        // ï¿½Gï¿½É–ï¿½ï¿½ï¿½
         if (other.CompareTag("Enemy"))
         {
             if (hasShattered) return;
@@ -52,17 +52,17 @@ public class Watermelon : MonoBehaviour
                 enemy = other.GetComponentInParent<EnemyHealth>();
             }
 
-            // –{‘Ì‚Ìƒ_ƒ[ƒW
+            // ï¿½{ï¿½Ì‚Ìƒ_ï¿½ï¿½ï¿½[ï¿½W
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
             }
 
-            // ”j—ôˆ—
+            // ï¿½jï¿½ôˆ—ï¿½
             Shatter();
         }
 
-        // ’n–Ê‚â•Ç‚ÉÕ“Ë
+        // ï¿½nï¿½Ê‚ï¿½Ç‚ÉÕ“ï¿½
         if (other.CompareTag("Ground"))
         {
             if (!hasShattered)
@@ -72,14 +72,14 @@ public class Watermelon : MonoBehaviour
         }
     }
 
-    // ƒXƒCƒJ‚ªÓ‚¯‚éˆ—
+    // ï¿½Xï¿½Cï¿½Jï¿½ï¿½ï¿½Ó‚ï¿½ï¿½éˆï¿½ï¿½
     void Shatter()
     {
         if (hasShattered) return;
 
         hasShattered = true;
 
-        // ”j•Ğ‚ğ¶¬
+        // ï¿½jï¿½Ğ‚ğ¶ï¿½
         if (fragmentPrefab != null)
         {
             for (int i = 0; i < fragmentCount; i++)
@@ -116,14 +116,14 @@ public class Watermelon : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // UŒ‚—Í‚Ì‹­‰»
+    // ï¿½Uï¿½ï¿½ï¿½Í‚Ì‹ï¿½ï¿½ï¿½
     public void UpgradeDamage(int amount)
     {
         damage += amount;
         fragmentDamage += amount;
     }
 
-    // ”j•Ğ”‚Ì‹­‰»
+    // ï¿½jï¿½Ğï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
     public void UpgradeFragmentCount(int amount)
     {
         fragmentCount += amount;
