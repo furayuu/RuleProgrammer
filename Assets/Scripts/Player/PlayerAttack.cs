@@ -129,11 +129,14 @@ public class PlayerAttack : MonoBehaviour
             0f
         );
 
-        if (direction < 0)
-        {
-            bullet.transform.localScale =
-                new Vector3(-1, 1, 1);
-        }
+
+        /* 弾の元のサイズを維持したまま左右反転する
+        Vector3 bulletScale = bullet.transform.localScale;
+
+        bulletScale.x = Mathf.Abs(bulletScale.x) * direction;
+
+        bullet.transform.localScale = bulletScale;
+        */
     }
 
     void ShootThrow()
