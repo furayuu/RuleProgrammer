@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // すでに破棄される弾は処理しない
+        // すでに処理済みの弾は無視する
         if (hasHit)
             return;
 
@@ -63,10 +63,17 @@ public class Projectile : MonoBehaviour
             }
         }
 
-        // 地面や壁に衝突した場合
+        // 地面に衝突した場合
         else if (other.CompareTag("Ground"))
         {
             hasHit = true;
+
+            // 地面に衝突したときの特殊効果を実行する
+            if (fruitEffect != null)
+            {
+                fruitEffect.OnGroundHit();
+            }
+
             Destroy(gameObject);
         }
     }

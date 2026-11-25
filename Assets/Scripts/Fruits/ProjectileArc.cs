@@ -49,7 +49,7 @@ public class ProjectileArc : MonoBehaviour
         initialized = true;
     }
 
-    // 敵を追跡して投げる
+    // 対象を追跡して投げる
     public void InitializeTarget(
         Vector3 start,
         Transform target,
@@ -98,7 +98,7 @@ public class ProjectileArc : MonoBehaviour
 
             if (isTargetLocked && target != null)
             {
-                HitEnemy(target);
+                HitTarget(target);
             }
 
             Destroy(gameObject);
@@ -121,13 +121,13 @@ public class ProjectileArc : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            HitEnemy(other.transform);
+            HitTarget(other.transform);
             Destroy(gameObject);
         }
     }
 
-    // 敵にダメージと特殊効果を与える
-    private void HitEnemy(Transform hitTarget)
+    // 敵または味方に命中した場合の処理
+    private void HitTarget(Transform hitTarget)
     {
         if (hasHit || hitTarget == null)
             return;
@@ -135,18 +135,37 @@ public class ProjectileArc : MonoBehaviour
         EnemyHealth enemy =
             hitTarget.GetComponentInParent<EnemyHealth>();
 
-        if (enemy == null)
+        AllyHealth ally =
+            hitTarget.GetComponentInParent<AllyHealth>();
+
+        // 敵でも味方でもない場合は処理しない
+        if (enemy == null && ally == null)
+            return;
+
+        // 特殊効果で命中可能か確認する
+        if (
+            fruitEffect != null &&
+            !fruitEffect.CanHitTarget(
+                enemy != null ? enemy.transform : ally.transform
+            )
+        )
             return;
 
         hasHit = true;
 
-        // 基本ダメージを与える
-        enemy.TakeDamage(damage);
+        // 敵に命中した場合はダメージを与える
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+        }
 
         // 特殊効果を実行する
         if (fruitEffect != null)
         {
-            fruitEffect.Apply(enemy.transform);
+            Transform effectTarget =
+                enemy != null ? enemy.transform : ally.transform;
+
+            fruitEffect.Apply(effectTarget);
         }
     }
 }

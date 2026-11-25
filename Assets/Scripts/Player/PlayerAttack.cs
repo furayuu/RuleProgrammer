@@ -18,7 +18,6 @@ public class PlayerAttack : MonoBehaviour
     public float bulletSpeed = 10f;
 
     [Header("Throw Attack")]
-
     [Tooltip("抛物線高度")]
     public float throwHeight = 3f;
 
@@ -27,6 +26,9 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Throw Range")]
     public float maxThrowDistance = 10f;
+
+    [Header("Strawberry")]
+    public float strawberryLockRadius = 3f;
 
     [Header("Ground Detection")]
     public LayerMask groundLayer;
@@ -70,6 +72,7 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    // マウスの方向にプレイヤーを向ける
     void FaceMouse()
     {
         Vector3 mousePos =
@@ -85,6 +88,7 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
+    // 直射攻撃
     void ShootDirect()
     {
         Vector3 mousePos =
@@ -124,21 +128,16 @@ public class PlayerAttack : MonoBehaviour
         Rigidbody2D rb =
             bullet.GetComponent<Rigidbody2D>();
 
-        rb.velocity = new Vector2(
-            direction * bulletSpeed,
-            0f
-        );
-
-
-        /* 弾の元のサイズを維持したまま左右反転する
-        Vector3 bulletScale = bullet.transform.localScale;
-
-        bulletScale.x = Mathf.Abs(bulletScale.x) * direction;
-
-        bullet.transform.localScale = bulletScale;
-        */
+        if (rb != null)
+        {
+            rb.velocity = new Vector2(
+                direction * bulletSpeed,
+                0f
+            );
+        }
     }
 
+    // 投擲攻撃
     void ShootThrow()
     {
         Vector3 mousePos =
@@ -148,6 +147,17 @@ public class PlayerAttack : MonoBehaviour
 
         mousePos.z = 0;
 
+        // イチゴの場合は味方を検索する
+        if (
+            throwProjectilePrefab != null &&
+            throwProjectilePrefab.GetComponent<StrawberryEffect>() != null
+        )
+        {
+            ShootStrawberry(mousePos);
+            return;
+        }
+
+        // 通常の投擲処理
         Vector3 direction =
             mousePos - firePoint.position;
 
@@ -171,9 +181,7 @@ public class PlayerAttack : MonoBehaviour
             );
 
         if (!hit)
-        {
             return;
-        }
 
         Vector3 targetPos = hit.point;
 
@@ -187,13 +195,16 @@ public class PlayerAttack : MonoBehaviour
         ProjectileArc arc =
             bullet.GetComponent<ProjectileArc>();
 
-        if (arc != null)
+        if (arc == null)
         {
-            arc.damage =
-                Mathf.RoundToInt(
-                    arc.damage * damageMultiplier
-                );
+            Destroy(bullet);
+            return;
         }
+
+        arc.damage =
+            Mathf.RoundToInt(
+                arc.damage * damageMultiplier
+            );
 
         // チェリーの爆発ダメージにも倍率を適用する
         CherryEffect cherryEffect =
@@ -211,5 +222,85 @@ public class PlayerAttack : MonoBehaviour
             throwHeight,
             throwDuration / throwSpeedMultiplier
         );
+    }
+
+    // イチゴを味方に向かって投げる
+    void ShootStrawberry(Vector3 mousePos)
+    {
+        AllyHealth target = FindNearestAlly(mousePos);
+
+        // 範囲内に味方がいない場合は発射しない
+        if (target == null)
+            return;
+
+        // 最大投擲距離を確認する
+        if (
+            Vector2.Distance(
+                firePoint.position,
+                target.transform.position
+            ) > maxThrowDistance
+        )
+            return;
+
+        GameObject bullet =
+            Instantiate(
+                throwProjectilePrefab,
+                firePoint.position,
+                Quaternion.identity
+            );
+
+        ProjectileArc arc =
+            bullet.GetComponent<ProjectileArc>();
+
+        if (arc == null)
+        {
+            Destroy(bullet);
+            return;
+        }
+
+        // 味方をロックオンして放物線で投げる
+        arc.InitializeTarget(
+            firePoint.position,
+            target.transform,
+            throwHeight,
+            throwDuration / throwSpeedMultiplier
+        );
+    }
+
+    // マウスに最も近い味方を探す
+    AllyHealth FindNearestAlly(Vector3 mousePos)
+    {
+        Collider2D[] colliders =
+            Physics2D.OverlapCircleAll(
+                mousePos,
+                strawberryLockRadius
+            );
+
+        AllyHealth nearestAlly = null;
+
+        float nearestDistance = float.MaxValue;
+
+        foreach (Collider2D col in colliders)
+        {
+            AllyHealth ally =
+                col.GetComponentInParent<AllyHealth>();
+
+            if (ally == null)
+                continue;
+
+            float distance =
+                Vector2.Distance(
+                    mousePos,
+                    ally.transform.position
+                );
+
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestAlly = ally;
+            }
+        }
+
+        return nearestAlly;
     }
 }

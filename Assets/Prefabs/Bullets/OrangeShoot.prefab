@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 4911816842092216437}
   - component: {fileID: 5179512127365968227}
   - component: {fileID: 8934731335115181677}
-  - component: {fileID: 7830932351495248228}
+  - component: {fileID: -8419466186199397807}
+  - component: {fileID: 6970548178015621564}
   m_Layer: 0
   m_Name: OrangeShoot
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,7 +150,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7830932351495248228
+--- !u!114 &-8419466186199397807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3893251312176767823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a26ac299f631add48bbdee3d25cc907a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  lifeTime: 3
+--- !u!114 &6970548178015621564
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,9 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6bb498616142c42bdd2d4152e04959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruitType: 5
-  damage: 3
-  lifeTime: 5
-  speed: 8
-  maxBounceCount: 3
-  bounceSearchRadius: 6
+  maxBounceCount: 2
+  searchRadius: 6
+  bounceArcPrefab: {fileID: 3893251312176767823, guid: 4df3de597f871c44081b1b05fa2bed1d, type: 3}
+  bounceHeight: 2
+  bounceDuration: 0.6

@@ -1,67 +1,34 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
-public class WatermelonFragment : MonoBehaviour
+public class WatermelonFragment : FruitEffectBase
 {
-    [Header("Fragment")]
-    public float lifeTime = 2f;
+    // 攻撃済みの敵を記録する
+    private HashSet<EnemyHealth> hitEnemies =
+        new HashSet<EnemyHealth>();
 
-    private Rigidbody2D rb;
-    private int damage;
-    private bool hasHit = false;
-
-    void Awake()
+    // 同じ敵に二度命中しないようにする
+    public override bool CanHitTarget(Transform target)
     {
-        rb = GetComponent<Rigidbody2D>();
-    }
+        if (target == null)
+            return false;
 
-    void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
-    // �j�Ђ̈ړ������ƍU���͂�ݒ�
-    public void Initialize(
-        Vector2 direction,
-        float speed,
-        int fragmentDamage)
-    {
-        damage = fragmentDamage;
-
-        if (rb != null)
-        {
-            rb.velocity = direction.normalized * speed;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (hasHit) return;
-
-        // �G�ɖ���
         EnemyHealth enemy =
-            other.GetComponent<EnemyHealth>();
+            target.GetComponentInParent<EnemyHealth>();
 
-        if (enemy == null)
-        {
-            enemy = other.GetComponentInParent<EnemyHealth>();
-        }
+        if (enemy == null || enemy.IsDead)
+            return false;
 
-        if (enemy != null)
-        {
-            hasHit = true;
-
-            enemy.TakeDamage(damage);
-
-            Debug.Log("Watermelon Fragment Hit!");
-
-            Destroy(gameObject);
-        }
-
-        // �n�ʂ�ǂɏՓ�
-        else if (other.CompareTag("Ground"))
-        {
-            Destroy(gameObject);
-        }
+        // 初めて命中した敵だけ攻撃を許可する
+        return hitEnemies.Add(enemy);
     }
+
+    // 小さなスイカには追加の特殊効果はない
+    public override void Apply(Transform target)
+    {
+    }
+
+    // 敵に命中しても弾を破棄しない
+    public override bool ShouldDestroyProjectile => false;
 }

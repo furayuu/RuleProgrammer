@@ -14,4 +14,9 @@ public abstract class FruitEffectBase : MonoBehaviour
 
     // 命中後に弾を破棄するかどうか
     public virtual bool ShouldDestroyProjectile => true;
+
+    // 地面に衝突したときの特殊効果
+    public virtual void OnGroundHit()
+    {
+    }
 }
