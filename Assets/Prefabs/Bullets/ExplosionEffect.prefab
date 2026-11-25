@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5596858125785917209}
   - component: {fileID: 2559316846022411191}
   m_Layer: 0
-  m_Name: CherryEffect
+  m_Name: ExplosionEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
