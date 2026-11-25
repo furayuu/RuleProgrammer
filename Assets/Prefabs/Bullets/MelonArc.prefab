@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 1196333986716053988}
   - component: {fileID: 7113696803669641388}
   - component: {fileID: 5696916407870438302}
-  - component: {fileID: -3542855693755157893}
   - component: {fileID: -5665568700967145755}
+  - component: {fileID: 7397570061958373375}
   m_Layer: 0
-  m_Name: Melon
+  m_Name: MelonArc
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,20 +150,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &-3542855693755157893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4068164847485520656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26ac299f631add48bbdee3d25cc907a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 1
-  lifeTime: 3
 --- !u!114 &-5665568700967145755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,3 +166,16 @@ MonoBehaviour:
   fragmentCount: 6
   fragmentDamage: 1
   fragmentSpeed: 10
+--- !u!114 &7397570061958373375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4068164847485520656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb8d4fe437401af4a849b66b65661a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1

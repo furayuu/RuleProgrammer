@@ -4,9 +4,38 @@ using UnityEngine.EventSystems;
 
 public class PlayerAttack : MonoBehaviour
 {
+    // 直射水果の種類
+    public enum DirectFruitType
+    {
+        Apple,
+        Kiwi,
+        Orange,
+        Watermelon
+    }
+
+    // 投擲水果の種類
+    public enum ThrowFruitType
+    {
+        Apple,
+        Banana,
+        Cherry,
+        Strawberry,
+        Pineapple
+    }
+
+    [Header("Direct Fruit List")]
+    [Tooltip("順番：AppleShoot / KiwiShoot / OrangeShoot / Melon")]
+    public GameObject[] directFruitPrefabs;
+
+    public DirectFruitType selectedDirectFruit;
+
+    [Header("Throw Fruit List")]
+    [Tooltip("順番：AppleArc / BananaArc / CherryArc / Strawberry / PineappleShoot")]
+    public GameObject[] throwFruitPrefabs;
+
+    public ThrowFruitType selectedThrowFruit;
+
     [Header("Projectile")]
-    public GameObject directProjectilePrefab;
-    public GameObject throwProjectilePrefab;
     public Transform firePoint;
 
     [Header("Attack")]
@@ -38,37 +67,64 @@ public class PlayerAttack : MonoBehaviour
     public float attackSpeedMultiplier = 1f;
     public float throwSpeedMultiplier = 1f;
 
+    // 選択中の直射フルーツを取得する
+    GameObject GetDirectFruitPrefab()
+    {
+        int index = (int)selectedDirectFruit;
+
+        if (
+            directFruitPrefabs == null ||
+            index >= directFruitPrefabs.Length
+        )
+            return null;
+
+        return directFruitPrefabs[index];
+    }
+
+    // 選択中の投擲フルーツを取得する
+    GameObject GetThrowFruitPrefab()
+    {
+        int index = (int)selectedThrowFruit;
+
+        if (
+            throwFruitPrefabs == null ||
+            index >= throwFruitPrefabs.Length
+        )
+            return null;
+
+        return throwFruitPrefabs[index];
+    }
+
     void Update()
     {
         FaceMouse();
 
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (EventSystem.current != null &&
+            EventSystem.current.IsPointerOverGameObject())
             return;
 
         attackTimer -= Time.deltaTime;
 
         if (
-            Input.GetMouseButtonDown(0)
-            && attackTimer <= 0
+            Input.GetMouseButtonDown(0) &&
+            attackTimer <= 0
         )
         {
             ShootDirect();
 
             attackTimer =
-                attackCooldown
-                / attackSpeedMultiplier;
+                attackCooldown / attackSpeedMultiplier;
         }
 
         if (
-            Input.GetMouseButtonDown(1)
-            && attackTimer <= 0
+            Input.GetMouseButtonDown(1) &&
+            attackTimer <= 0
         )
         {
             ShootThrow();
 
             attackTimer =
-                attackCooldown
-                / attackSpeedMultiplier;
+                attackCooldown / attackSpeedMultiplier;
         }
     }
 
@@ -91,6 +147,14 @@ public class PlayerAttack : MonoBehaviour
     // 直射攻撃
     void ShootDirect()
     {
+        GameObject prefab = GetDirectFruitPrefab();
+
+        if (prefab == null)
+        {
+            Debug.LogWarning("直射フルーツが設定されていません。");
+            return;
+        }
+
         Vector3 mousePos =
             Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -99,7 +163,7 @@ public class PlayerAttack : MonoBehaviour
 
         GameObject bullet =
             Instantiate(
-                directProjectilePrefab,
+                prefab,
                 firePoint.position,
                 Quaternion.identity
             );
@@ -140,6 +204,14 @@ public class PlayerAttack : MonoBehaviour
     // 投擲攻撃
     void ShootThrow()
     {
+        GameObject prefab = GetThrowFruitPrefab();
+
+        if (prefab == null)
+        {
+            Debug.LogWarning("投擲フルーツが設定されていません。");
+            return;
+        }
+
         Vector3 mousePos =
             Camera.main.ScreenToWorldPoint(
                 Input.mousePosition
@@ -148,12 +220,9 @@ public class PlayerAttack : MonoBehaviour
         mousePos.z = 0;
 
         // イチゴの場合は味方を検索する
-        if (
-            throwProjectilePrefab != null &&
-            throwProjectilePrefab.GetComponent<StrawberryEffect>() != null
-        )
+        if (prefab.GetComponent<StrawberryEffect>() != null)
         {
-            ShootStrawberry(mousePos);
+            ShootStrawberry(mousePos, prefab);
             return;
         }
 
@@ -187,7 +256,7 @@ public class PlayerAttack : MonoBehaviour
 
         GameObject bullet =
             Instantiate(
-                throwProjectilePrefab,
+                prefab,
                 firePoint.position,
                 Quaternion.identity
             );
@@ -225,7 +294,10 @@ public class PlayerAttack : MonoBehaviour
     }
 
     // イチゴを味方に向かって投げる
-    void ShootStrawberry(Vector3 mousePos)
+    void ShootStrawberry(
+        Vector3 mousePos,
+        GameObject prefab
+    )
     {
         AllyHealth target = FindNearestAlly(mousePos);
 
@@ -244,7 +316,7 @@ public class PlayerAttack : MonoBehaviour
 
         GameObject bullet =
             Instantiate(
-                throwProjectilePrefab,
+                prefab,
                 firePoint.position,
                 Quaternion.identity
             );
